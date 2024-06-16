@@ -8,4 +8,10 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Override
+    @EntityGraph(attributePaths = {"category", "brand"})
+    List<Product> findAll();
+
+    @EntityGraph(attributePaths = {"category", "brand"})
+    List<Product> findAllByOrderByIdDesc();
 }
