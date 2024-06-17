@@ -1,6 +1,7 @@
 package com.musinsa.productapp.product.service;
 
-import com.musinsa.productapp.product.model.dto.LowestPriceResponseDTO;
+import com.musinsa.productapp.PriceUtils;
+import com.musinsa.productapp.product.model.dto.CategoryWithLowestPriceProductResponseDTO;
 import com.musinsa.productapp.product.model.dto.ProductDTO;
 import com.musinsa.productapp.product.model.entity.Category;
 import com.musinsa.productapp.product.model.entity.CategoryLowestPriceProduct;
@@ -11,7 +12,9 @@ import com.musinsa.productapp.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.NumberUtils;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -51,14 +54,14 @@ public class ProductService {
 
     //구현1 v2
     @Transactional
-    public LowestPriceResponseDTO getCategoriesWithLowestPriceProducts() {
+    public CategoryWithLowestPriceProductResponseDTO getCategoriesWithLowestPriceProducts() {
         //모든 카테고리 호출
         List<Category> allCategories = categoryRepository.getAllByOrderByIdDesc();
 
         //카테고리별 최저 상품 데이터 호출 -> 데이터 없을 시 lowest 테이블 업데이트 및 조회 해서 가져온다
         List<Product> products = allCategories.stream().map(category -> categoryLowestPriceProductRepository.findByProductCategory(category).orElse(updateLowestPriceProducts(category)).getProduct()).toList();
 
-        return LowestPriceResponseDTO.builder()
+        return CategoryWithLowestPriceProductResponseDTO.builder()
                 .productList(getProductDTOs(products))
                 .totalPrice(getTotalPriceOfProducts(products))
                 .build();
@@ -69,9 +72,9 @@ public class ProductService {
         return products.stream().map(ProductDTO::from).collect(Collectors.toList());
     }
 
-    private int getTotalPriceOfProducts(List<Product> prooducts) {
+    private String getTotalPriceOfProducts(List<Product> prooducts) {
         //total price 계산
-        return prooducts.stream().mapToInt(Product::getPrice).sum();
+        return PriceUtils.formatPrice(prooducts.stream().mapToInt(Product::getPrice).sum());
     }
 
     public CategoryLowestPriceProduct updateLowestPriceProducts(Category category) {
@@ -88,5 +91,5 @@ public class ProductService {
 
         *DDB의 document 구조 사용시 성능 개선 여지 있음
      */
-    public 
+    public
  }
