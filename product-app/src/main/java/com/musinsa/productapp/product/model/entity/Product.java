@@ -24,7 +24,8 @@ public class Product {
 	private int price;
 
 	@Builder
-	protected Product(int price, Category category, Brand brand) {
+	protected Product(Long id,int price, Category category, Brand brand) {
+		this.id = id;
 		this.price = price;
 		this.category = category;
 		this.brand = brand;

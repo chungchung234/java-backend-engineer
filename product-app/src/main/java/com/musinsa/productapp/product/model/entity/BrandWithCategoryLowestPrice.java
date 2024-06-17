@@ -1,12 +1,10 @@
 package com.musinsa.productapp.product.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "brand_with_category_lowest_price")
@@ -23,7 +21,8 @@ public class BrandWithCategoryLowestPrice {
     private int totalCategoryMinPrice;
 
     @Builder
-    protected BrandWithCategoryLowestPrice(Brand brand, int totalCategoryMinPrice) {
+    protected BrandWithCategoryLowestPrice(Long id, Brand brand, int totalCategoryMinPrice) {
+        this.id = id;
         this.brand = brand;
         this.totalCategoryMinPrice = totalCategoryMinPrice;
     }
