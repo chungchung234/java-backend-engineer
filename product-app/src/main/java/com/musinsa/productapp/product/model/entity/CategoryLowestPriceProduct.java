@@ -20,7 +20,7 @@ public class CategoryLowestPriceProduct {
     private Product product;
 
     @Builder
-    public CategoryLowestPriceProduct(Product product) {
+    protected CategoryLowestPriceProduct(Product product) {
         this.product = product;
     }
 }

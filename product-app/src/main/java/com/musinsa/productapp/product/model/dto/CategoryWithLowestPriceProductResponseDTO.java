@@ -9,9 +9,9 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class LowestPriceResponseDTO{
+public class CategoryWithLowestPriceProductResponseDTO {
 
     List<ProductDTO> productList;
 
-    int totalPrice;
+    String totalPrice;
 }
