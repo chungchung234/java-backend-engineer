@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+//    구현1 v1
 //    @Override
 //    @EntityGraph(attributePaths = {"category", "brand"})
 //    List<Product> findAll();
@@ -20,6 +21,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @EntityGraph(attributePaths = {"category", "brand"})
     Optional<Product> findTopByCategoryOrderByPriceAscIdDesc(Category category);
-    @EntityGraph(attributePaths = {"category", "brand"})
+
     List<Product> findByBrand(Brand brand);
+    Product findTopByCategoryNameOrderByPriceAsc(String categoryName);
+    Product findTopByCategoryNameOrderByPriceDesc(String categoryName);
+
 }

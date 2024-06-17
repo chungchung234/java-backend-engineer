@@ -6,7 +6,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CategoryWithPriceDTO {
+public class CategoryWithMinMaxPriceResponseDTO {
     private String categoryName;
-    private String price;
+    private BrandWithPriceDTO minPrice;
+    private BrandWithPriceDTO maxPrice;
 }

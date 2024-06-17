@@ -3,13 +3,12 @@ package com.musinsa.productapp.product.model.dto;
 import com.musinsa.productapp.product.model.entity.Brand;
 import com.musinsa.productapp.product.model.entity.Category;
 import com.musinsa.productapp.product.model.entity.Product;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-@Setter
 public class ProductDTO {
     private Long id;
 

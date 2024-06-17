@@ -1,10 +1,7 @@
 package com.musinsa.productapp.product.service;
 
 import com.musinsa.productapp.PriceUtils;
-import com.musinsa.productapp.product.model.dto.CategoryWithLowestPriceProductResponseDTO;
-import com.musinsa.productapp.product.model.dto.CategoryWithPriceDTO;
-import com.musinsa.productapp.product.model.dto.LowestPriceBrandWithCategoryResponseDTO;
-import com.musinsa.productapp.product.model.dto.ProductDTO;
+import com.musinsa.productapp.product.model.dto.*;
 import com.musinsa.productapp.product.model.entity.*;
 import com.musinsa.productapp.product.repository.*;
 import org.springframework.stereotype.Service;
@@ -35,6 +32,8 @@ public class ProductService {
 
     /*
         구현1
+        카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
+
         고려사항
         1번 고려사항 만족하는 개발 후 API가 요청 시 마다 상품 전체에 대한 풀 스캔
         → 최저가 비교는 대량의 상품이 존재할 시 수행시간, 서버 부하 등 문제
@@ -97,8 +96,10 @@ public class ProductService {
 
     /*
         구현2
+        단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회하는 API
 
         *DDB의 document 구조 사용하여 브랜드별 최저가 총액 및 카테고리 정보 저장시 조회 성능 개선 여지 있을 것으로 보인다
+        *jpql 로 쿼리 성능 개선 가능할 것으로 예상
      */
     public LowestPriceBrandWithCategoryResponseDTO getLowestPriceBrandWithCategory(){
         //모든 브랜드 조회
@@ -159,4 +160,25 @@ public class ProductService {
                 .mapToInt(products -> products.stream().min(Comparator.comparing(Product::getPrice)).orElseThrow(NoSuchElementException::new).getPrice())
                 .sum();
     }
+
+        /*
+        구현3
+        카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
+
+         */
+    public CategoryWithMinMaxPriceResponseDTO getCategoryWithMinMaxPrice(String categoryName){
+        return CategoryWithMinMaxPriceResponseDTO.builder()
+                .categoryName(categoryName)
+                .minPrice(getBrandWithPriceDTO(productRepository.findTopByCategoryNameOrderByPriceAsc(categoryName)))
+                .maxPrice(getBrandWithPriceDTO(productRepository.findTopByCategoryNameOrderByPriceDesc(categoryName)))
+                .build();
+    }
+
+    private BrandWithPriceDTO getBrandWithPriceDTO(Product product) {
+        return BrandWithPriceDTO.builder()
+                .brand(product.getBrand().getName())
+                .price(PriceUtils.formatPrice(product.getPrice()))
+                .build();
+    }
+
 }
