@@ -1,6 +1,5 @@
 # java-backend-engineer
 
-# Musinsa Product API
 
 ## 1. 구현 범위에 대한 설명
 
@@ -26,4 +25,5 @@ CUD 구현
 - Gradle 8.7
 
 ## 3. 기타 추가 정보
--
+생산성 관리
+https://chungchung.notion.site/Java-Backend-Engineer-5f96edbdfa1544d88a2da91522618c39?pvs=4
