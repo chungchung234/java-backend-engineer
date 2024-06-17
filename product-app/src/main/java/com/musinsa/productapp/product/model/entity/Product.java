@@ -21,10 +21,10 @@ public class Product {
 	private Brand brand;
 
 	@Column(nullable = false)
-	private double price;
+	private int price;
 
 	@Builder
-	protected Product(double price, Category category, Brand brand) {
+	protected Product(int price, Category category, Brand brand) {
 		this.price = price;
 		this.category = category;
 		this.brand = brand;
