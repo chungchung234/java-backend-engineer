@@ -19,7 +19,8 @@ public class Brand {
 	private String name;
 
 	@Builder
-	public Brand(String name) {
+	protected Brand(String name) {
 		this.name = name;
 	}
+
 }

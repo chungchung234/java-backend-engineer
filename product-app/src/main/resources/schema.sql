@@ -20,5 +20,12 @@ CREATE TABLE IF NOT EXISTS Product (
 CREATE TABLE category_lowest_price_product (
                                                id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                product_id BIGINT NOT NULL,
-                                               FOREIGN KEY (product_id) REFERENCES product(id)
+                                               FOREIGN KEY (product_id) REFERENCES Product(id)
+);
+
+CREATE TABLE brand_with_category_lowest_price (
+                                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                               brand_id BIGINT NOT NULL,
+                                               total_category_min_price INT NOT NULL,
+                                               FOREIGN KEY (brand_id) REFERENCES Brand(id)
 );
