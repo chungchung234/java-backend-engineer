@@ -5,6 +5,7 @@ import com.musinsa.productapp.product.model.dto.*;
 import com.musinsa.productapp.product.model.entity.*;
 import com.musinsa.productapp.product.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -71,7 +72,11 @@ public class ProductService {
 
     private Product getLowestPriceProduct(Category category) {
         //최저가 데이터 없을 시 최저가 데이터 생성 및 조회
-        return categoryLowestPriceProductRepository.findByProductCategory(category).orElse(saveCategoryLowestPriceProducts(category)).getProduct();
+        return getCategoryLowestPriceProduct(category).getProduct();
+    }
+
+    private CategoryLowestPriceProduct getCategoryLowestPriceProduct(Category category) {
+        return categoryLowestPriceProductRepository.findByProductCategory(category).orElse(saveCategoryLowestPriceProducts(category));
     }
 
     private List<ProductDTO> getProductDTOs(List<Product> products) {
@@ -181,4 +186,47 @@ public class ProductService {
                 .build();
     }
 
+    /*
+    구현4
+        상품 저장, 업데이트 시 캐시 테이블 업데이트 조건 추가
+
+    */
+    @Transactional
+    public Long saveProduct(ProductRequestDTO productRequestDTO) {
+
+        brandRepository.findById(productRequestDTO.getBrandDTO().getBrandId()).orElseThrow(NoSuchElementException::new);
+        categoryRepository.findById(productRequestDTO.getCategoryDTO().getCategoryId()).orElseThrow(NoSuchElementException::new);
+        updateCateogoryLowestPriceProduct(productRequestDTO);
+        updateLowestPriceBrand(productRequestDTO);
+        return productRepository.save(productRequestDTO.toEntitiy()).getId();
+
+    }
+
+    private void updateLowestPriceBrand(ProductRequestDTO productRequestDTO) {
+        saveBrandLowestPrice(productRequestDTO.getBrandDTO().toEntity());
+    }
+
+    private void updateCateogoryLowestPriceProduct(ProductRequestDTO productRequestDTO) {
+        CategoryLowestPriceProduct lowestPriceProduct = getCategoryLowestPriceProduct(productRequestDTO.getCategoryDTO().toEntity());
+        if ( productRequestDTO.getPrice() < lowestPriceProduct.getProduct().getPrice()){
+            lowestPriceProduct.setProduct(productRequestDTO.toEntitiy());
+        }
+        ;
+    }
+
+    @Transactional
+    public Long updateProduct(Long id, ProductRequestDTO productRequestDTO) {
+        productRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        brandRepository.findById(productRequestDTO.getBrandDTO().getBrandId()).orElseThrow(NoSuchElementException::new);
+        categoryRepository.findById(productRequestDTO.getCategoryDTO().getCategoryId()).orElseThrow(NoSuchElementException::new);
+        updateCateogoryLowestPriceProduct(productRequestDTO);
+        updateLowestPriceBrand(productRequestDTO);
+        return productRepository.save(productRequestDTO.toEntitiy()).getId();
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        productRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        productRepository.deleteById(id);
+    }
 }

@@ -19,7 +19,8 @@ public class Brand {
 	private String name;
 
 	@Builder
-	protected Brand(String name) {
+	protected Brand(Long id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 
