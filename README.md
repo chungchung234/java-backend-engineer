@@ -40,5 +40,5 @@
 - Gradle 8.7
 
 ## 3. 기타 추가 정보
-생산성 관리
+생산성 관리(분석, 설계, 회고 등 내용 포함)    
 https://chungchung.notion.site/Java-Backend-Engineer-5f96edbdfa1544d88a2da91522618c39?pvs=4
